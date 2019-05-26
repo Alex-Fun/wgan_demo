@@ -197,7 +197,7 @@ while step <= max_step:
                                            learning_rate_d:learning_rate_global
                                            })
     if step % 10 == 0:
-        logging.debug('step %d, loss_d:%.5f， loss_g=%.5f' % (step, loss_val_d, loss_val_g))
+        logging.debug('step {0}, loss_d:{1}， loss_g={2}'.format(step, loss_val_d, loss_val_g))
 
     if step % 500 == 0:
         z_val, fake_val, real_val, fake_result_val = sess.run([z, fake_img, real_img, fake_result], feed_dict={real_img: real_img_val})
