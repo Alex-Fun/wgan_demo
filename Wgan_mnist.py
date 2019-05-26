@@ -182,7 +182,7 @@ learning_rate_global = 5e-5
 #   每10次打印一次两个loss
 #   最后一次（或每100次）输出生成网络伪造的数据图片
 while step <= max_step:
-    d_train_step = np.max((100 - step*3), 5)
+    d_train_step = np.max((100 - step*3, 5))
     if step < 25 or step % 500 == 0:
         d_train_step = 100
     for d_step in range(d_train_step):
