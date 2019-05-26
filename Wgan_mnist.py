@@ -161,7 +161,7 @@ dataset = input_data.read_data_sets("../data/mnist/input_data/", one_hot=True)
 config = tf.ConfigProto(allow_soft_placement=True)
 config.gpu_options.allow_growth = True
 
-sess = tf.Session(config)
+sess = tf.Session(config=config)
 sess.run(init_op)
 plt.ion()
 
