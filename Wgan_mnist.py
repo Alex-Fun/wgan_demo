@@ -125,8 +125,12 @@ fake_img = generator(z)
 #   训练时限制D权重的范围
 fake_result = discriminator(fake_img)
 real_result = discriminator(real_img, reuse=True)
-loss_g_d = tf.log(real_result) + tf.log(1-fake_result)
-loss_g = tf.log(1-fake_result)
+# loss_g_d = -tf.log(real_result) + tf.log(1-fake_result)
+# loss_g = tf.log(1-fake_result)
+
+loss_g_d = tf.reduce_mean(fake_result - real_result)
+loss_g = tf.reduce_mean(-fake_result)
+
 
 learning_rate_g = tf.placeholder(dtype=tf.float32)
 learning_rate_d = tf.placeholder(dtype=tf.float32)
