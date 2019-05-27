@@ -194,7 +194,6 @@ if not os.path.exists(summary_path):
 
 saver = tf.train.Saver()
 checkpoint_path = os.path.join(output_dir, 'wgan_checkpoint')
-checkpoint_path = 'D:\tmp\checkpoint\wgan-mnist-demo'
 saver.restore(sess, checkpoint_path)
 # 训练
 #   每10次打印一次两个loss
