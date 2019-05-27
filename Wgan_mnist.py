@@ -202,6 +202,7 @@ while step <= max_step:
     if step % 500 == 0:
         z_val, fake_val, real_val, fake_result_val = sess.run([z, fake_img, real_img, fake_result], feed_dict={real_img: real_img_val})
         logging.debug('fake_result_val {0}'.format(fake_result_val))
+        logging.debug('fake_val {0}'.format(fake_val))
         # plt.imshow(fake_val[0].squeeze())
         cv2.imwrite(os.path.join(output_dir, 'g_img/g_{0}.jpg'.format(step)), fake_val[0].squeeze())
     step += 1
