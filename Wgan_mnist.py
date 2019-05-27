@@ -193,7 +193,7 @@ if not os.path.exists(summary_path):
     os.makedirs(summary_path)
 
 saver = tf.train.Saver()
-checkpoint_path = '/data/oHongMenYan/wgan-mnist-demo-checkpoint/'
+checkpoint_path = '/data/oHongMenYan/wgan-mnist-demo-checkpoint/checkpoint'
 saver.restore(sess, checkpoint_path)
 # 训练
 #   每10次打印一次两个loss
