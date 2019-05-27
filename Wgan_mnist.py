@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 import matplotlib.pyplot as plt
 import numpy as np
-import cv2
+# import cv2
 import time
 
 import logging
@@ -17,6 +17,8 @@ weights_clip_threshold = 0.1
 wgan_gp = False
 batch_size = 64
 output_dir = '/output'
+
+
 # 定义Generator 从小到大
 #   与分类网络结构相反，conv换为transpose_conv
 def generator(z):
@@ -131,6 +133,7 @@ real_result = discriminator(real_img, reuse=True)
 loss_g_d = tf.reduce_mean(fake_result - real_result)
 loss_g = tf.reduce_mean(-fake_result)
 
+fake_img_sum = tf.summary.image('G', fake_img)
 
 learning_rate_g = tf.placeholder(dtype=tf.float32)
 learning_rate_d = tf.placeholder(dtype=tf.float32)
@@ -182,10 +185,22 @@ step = 0
 max_step = 20000
 learning_rate_global = 5e-5
 
+g_img_path = os.path.join(output_dir, 'g_img')
+if not os.path.exists(g_img_path):
+    os.makedirs(g_img_path)
+summary_path = os.path.join(output_dir, 'summary')
+if not os.path.exists(summary_path):
+    os.makedirs(summary_path)
+
+saver = tf.train.Saver()
+checkpoint_path = os.path.join(output_dir, 'wgan_checkpoint')
+checkpoint_path = 'D:\tmp\checkpoint\wgan-mnist-demo'
+saver.restore(sess, checkpoint_path)
 # 训练
 #   每10次打印一次两个loss
 #   最后一次（或每100次）输出生成网络伪造的数据图片
 while step <= max_step:
+    summary_writer = tf.summary.FileWriter(summary_path, sess.graph)
     d_train_step = np.max((100 - step*3, 5))
     if step < 25 or step % 500 == 0:
         d_train_step = 100
@@ -204,15 +219,16 @@ while step <= max_step:
         logging.debug('step {0}, loss_d:{1}， loss_g={2}'.format(step, loss_val_d, loss_val_g))
 
     if step % 500 == 0:
-        z_val, fake_val, real_val, fake_result_val = sess.run([z, fake_img, real_img, fake_result], feed_dict={real_img: real_img_val})
+        z_val, fake_img_sum_result, real_val, fake_result_val = sess.run([z, fake_img_sum, real_img, fake_result], feed_dict={real_img: real_img_val})
         logging.debug('fake_result_val {0}'.format(fake_result_val))
-        logging.debug('fake_val {0}'.format(fake_val))
+        summary_writer.add_summary(fake_img_sum_result, max_step+step)
+        # logging.debug('fake_val {0}'.format(fake_val))
         # plt.imshow(fake_val[0].squeeze())
-        cv2.imwrite(os.path.join(output_dir, 'g_img/g_{0}.jpg'.format(step)), fake_val[0].squeeze())
+        # cv2.imwrite(os.path.join(g_img_path, 'g_{0}.jpg'.format(step)), fake_val[0].squeeze())
     step += 1
 
 saver = tf.train.Saver()
 checkpoint_path = os.path.join(output_dir, 'wgan_checkpoint')
 if not os.path.exists(checkpoint_path):
     os.makedirs(checkpoint_path)
-saver.save(sess, os.path.join(checkpoint_path, "model.ckpt"), global_step=step)
+saver.save(sess, os.path.join(checkpoint_path, "model.ckpt"), global_step=max_step+step)
