@@ -193,7 +193,7 @@ if not os.path.exists(summary_path):
     os.makedirs(summary_path)
 
 saver = tf.train.Saver()
-checkpoint_path = '/data/oHongMenYan/wgan-mnist-demo-checkpoint/checkpoint'
+checkpoint_path = '/data/oHongMenYan/wgan-mnist-demo-checkpoint/model.ckpt-20001'
 saver.restore(sess, checkpoint_path)
 # 训练
 #   每10次打印一次两个loss
@@ -220,7 +220,7 @@ while step <= max_step:
     if step % 500 == 0:
         z_val, fake_img_sum_result, real_val, fake_result_val = sess.run([z, fake_img_sum, real_img, fake_result], feed_dict={real_img: real_img_val})
         logging.debug('fake_result_val {0}'.format(fake_result_val))
-        summary_writer.add_summary(fake_img_sum_result, max_step+step)
+        summary_writer.add_summary(fake_img_sum_result, step)
         # logging.debug('fake_val {0}'.format(fake_val))
         # plt.imshow(fake_val[0].squeeze())
         # cv2.imwrite(os.path.join(g_img_path, 'g_{0}.jpg'.format(step)), fake_val[0].squeeze())
@@ -230,4 +230,4 @@ saver = tf.train.Saver()
 checkpoint_path = os.path.join(output_dir, 'wgan_checkpoint')
 if not os.path.exists(checkpoint_path):
     os.makedirs(checkpoint_path)
-saver.save(sess, os.path.join(checkpoint_path, "model.ckpt"), global_step=max_step+step)
+saver.save(sess, os.path.join(checkpoint_path, "model.ckpt"), global_step=step)
