@@ -227,7 +227,7 @@ while step <= max_step:
     step += 1
 
 saver = tf.train.Saver()
-# checkpoint_path = os.path.join(output_dir, 'wgan_checkpoint')
+checkpoint_path = os.path.join(output_dir, 'wgan_checkpoint')
 if not os.path.exists(checkpoint_path):
     os.makedirs(checkpoint_path)
 saver.save(sess, os.path.join(checkpoint_path, "model.ckpt"), global_step=max_step+step)
